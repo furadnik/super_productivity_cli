@@ -13,7 +13,7 @@ def get_list_tasks(args, supprod: SupProd) -> Iterable[Task]:
     if args.project_title:
         gen = supprod.get_project_by_name(args.project_title)  # type: ignore
 
-    return reversed(gen.todays_tasks if args.today else gen.tasks)
+    return filter(lambda task: not args.undone or task.done, reversed(gen.todays_tasks if args.today else gen.tasks))
 
 
 def default_task_params(parser: ArgumentParser) -> None:
@@ -21,6 +21,8 @@ def default_task_params(parser: ArgumentParser) -> None:
     parser.add_argument("--project-title", type=str, help="project title.")
     parser.add_argument("--today", default=False, action="store_true",
                         help="is it today.")
+    parser.add_argument("--undone", default=False, action="store_true",
+                        help="is it not done.")
 
 
 ap = ArgumentParser()
