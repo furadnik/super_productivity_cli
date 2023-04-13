@@ -161,10 +161,14 @@ class SupProd():
         contents = self.contents["project"]
         return [Project(self, x, contents["entities"][x]) for x in contents["ids"]]
 
-    def get_project_by_name(self, name) -> Project:
+    def get_project_by_name(self, name: str, case_insensitive: bool = True) -> Project:
+        """Get a project by name."""
+        if case_insensitive:
+            name = name.lower()
         for x in self.projects:
-            if x.title == name:
+            if (x.title.lower() if case_insensitive else x.title) == name:
                 return x
+        raise ValueError(f"Project with name {name} not found.")
 
     @property
     def todays_tasks(self):
